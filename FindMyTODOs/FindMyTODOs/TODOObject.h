@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 // TODO: change structure to a N-Tree
 // TODO: Each node is aware of their level of indentation
@@ -10,15 +11,17 @@
 class TODOObject
 {
 public:
-	TODOObject(int lineNumber, std::string line);
+	TODOObject(std::string name, bool isDirectory);
 	~TODOObject();
 
-	bool isFileName();
-
-	bool operator<(TODOObject& other);
-	operator std::string();
+	void insertSubdirectory(std::string directoryPath);
+	void insertLine(std::string filePath, std::string line, int lineNumber);
+	std::string toString(int indentLevel);
 
 private:
-	unsigned int m_lineNumber;
-	std::string m_line;
+	bool isDirectory;
+	std::string name;
+	std::vector<std::string> lines;
+	std::vector<TODOObject*> childrenDirectories;
+	std::vector<TODOObject*> files;
 };

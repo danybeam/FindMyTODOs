@@ -34,9 +34,7 @@ int main()
 	// TODO: add arguments to be able to pick directory to check
 	std::filesystem::path cwd = std::filesystem::current_path();
 
-	std::unordered_map<std::string, std::vector<TODOObject>> directoryMap;
-
-	directoryMap[cwd.string()].push_back(TODOObject(-1, cwd.string()));
+	TODOObject root(cwd.string(), true);
 
 	for (auto& path : std::filesystem::recursive_directory_iterator(cwd))
 	{
@@ -44,7 +42,7 @@ int main()
 
 		if (path.is_directory())
 		{
-			directoryMap[path.path().string()].push_back(TODOObject(-1, path.path().string()));
+			root.insertSubdirectory(currentPathAsString);
 			//std::cout << path.path().string() << std::endl;
 		}
 		else if (path.is_regular_file())
@@ -64,15 +62,10 @@ int main()
 				// TODO: add support for FIXME comments
 				// TODO: add support to define custom comments
 				// TODO: make this check to be begins with
-				if (currentLine.find("// TODO") != std::string::npos)
+				trim(currentLine);
+				if (currentLine.find("// TODO") == 0)
 				{
-					if (directoryMap[path.path().string()].empty())
-					{
-						directoryMap[path.path().string()].push_back(TODOObject(-1, path.path().string()));
-					}
-
-					trim(currentLine);
-					directoryMap[path.path().string()].push_back(TODOObject(lineNumber, currentLine));
+					root.insertLine(path.path().string(), currentLine, lineNumber);
 				}
 
 				lineNumber++;
@@ -82,82 +75,84 @@ int main()
 
 	}
 
-	std::vector<std::string> keys;
+	std::cout << root.toString(0);
 
-	for (auto entry : directoryMap)
-	{
-		keys.push_back(entry.first);
-	}
+	//std::vector<std::string> keys;
 
-	// TODO: I'm sure this can be optimized/simplified by using index access instead of range loop
-	std::sort(keys.begin(), keys.end());
-	int indent = 1;
-	int maxIndent = indent;
-	int currentDirIndex;
-	int currentKeyIndex = -1;
-	bool resetLastTime = false;
-	for (auto key : keys)
-	{
-		currentDirIndex = 0;
-		currentKeyIndex++;
-		if (directoryMap[key].size() == 1 && !resetLastTime)
-		{
-			indent = 1;
-			maxIndent = indent;
-			resetLastTime = true;
-			std::cout << std::endl;
-		}
+	//for (auto entry : directoryMap)
+	//{
+	//	keys.push_back(entry.first);
+	//}
 
-		for (auto line : directoryMap[key])
-		{
-			currentDirIndex++;
+	//// TODO: I'm sure this can be optimized/simplified by using index access instead of range loop
+	//std::sort(keys.begin(), keys.end());
+	//int indent = 1;
+	//int maxIndent = indent;
+	//int currentDirIndex;
+	//int currentKeyIndex = -1;
+	//bool resetLastTime = false;
+	//for (auto key : keys)
+	//{
+	//	currentDirIndex = 0;
+	//	currentKeyIndex++;
+	//	if (directoryMap[key].size() == 1 && !resetLastTime)
+	//	{
+	//		indent = 1;
+	//		maxIndent = indent;
+	//		resetLastTime = true;
+	//		std::cout << std::endl;
+	//	}
 
-			if (indent > 0)
-			{
-				unsigned char header = 195;
-				if (indent == 1)
-				{
-					header = 218;
-				}
-				else if (
-					(currentKeyIndex + 1) < keys.size() &&
-					currentDirIndex == directoryMap[key].size() &&
-					directoryMap[keys[currentKeyIndex + 1]].size() == 1 &&
-					directoryMap[key].size() > 1
-					)
-				{
-					header = 192;
-				}
-				else if (
-					(currentKeyIndex + 1) == keys.size() &&
-					currentDirIndex == directoryMap[key].size()
-					)
-				{
-					header = 192;
-				}
+	//	for (auto line : directoryMap[key])
+	//	{
+	//		currentDirIndex++;
 
-				std::cout << header;
+	//		if (indent > 0)
+	//		{
+	//			unsigned char header = 195;
+	//			if (indent == 1)
+	//			{
+	//				header = 218;
+	//			}
+	//			else if (
+	//				(currentKeyIndex + 1) < keys.size() &&
+	//				currentDirIndex == directoryMap[key].size() &&
+	//				directoryMap[keys[currentKeyIndex + 1]].size() == 1 &&
+	//				directoryMap[key].size() > 1
+	//				)
+	//			{
+	//				header = 192;
+	//			}
+	//			else if (
+	//				(currentKeyIndex + 1) == keys.size() &&
+	//				currentDirIndex == directoryMap[key].size()
+	//				)
+	//			{
+	//				header = 192;
+	//			}
 
-				for (int i = 0; i < indent * 2; i++)
-				{
-					std::cout << "-";
-				}
+	//			std::cout << header;
 
-				std::cout << "> ";
-			}
+	//			for (int i = 0; i < indent * 2; i++)
+	//			{
+	//				std::cout << "-";
+	//			}
 
-			std::cout << (std::string)line << std::endl;
+	//			std::cout << "> ";
+	//		}
 
-			if (line.isFileName())
-			{
-				indent++;
-				maxIndent = maxIndent > indent ? maxIndent : indent;
-			}
-		}
-		if (directoryMap[key].size() != 1)
-		{
-			resetLastTime = false;
-			indent--;
-		}
-	}
+	//		std::cout << (std::string)line << std::endl;
+
+	//		if (line.isFileName())
+	//		{
+	//			indent++;
+	//			maxIndent = maxIndent > indent ? maxIndent : indent;
+	//		}
+	//	}
+	//	if (directoryMap[key].size() != 1)
+	//	{
+	//		resetLastTime = false;
+	//		indent--;
+	//	}
+	//}
 }

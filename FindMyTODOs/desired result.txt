@@ -1,0 +1,18 @@
+indent 0    ┌C:\Users\Daniel\Downloads\root
+indent 1    ├--┬->\rootHeader.h
+indent 1.5  |  └--┬->(1)        : // TODO thing
+indent 1.5  |     ├->(7)        : // TODO middle thing
+indent 1.5  |     ├->(8)        : // TODO middle thing
+indent 1.5f |     └->(13)       : // TODO third thing
+indent 1f   └--┬->\child1Directory
+indent 2       ├--┬->\child1SRC.cpp
+indent 2.5     |  └--┬->(1)       : // TODO thing
+indent 2.5f    |     └->(5)       : // TODO third thing
+indent 2       ├--┬->\child2Sib1
+indent 3f      |  └--┬->\Child2Sib1SRC.cpp
+indent 3.5     |     └--┬->(1)      : // TODO thing
+indent 3.5f    |        └->(5)      : // TODO third thing
+indent 2f      └--┬->\child2Sib2
+indent 3f         └--┬->\Child2Sib2SRC.cpp
+indent 3.5           └--┬->(1)      : // TODO thing
+indent 3.5f             └->(5)      : // TODO third thing
