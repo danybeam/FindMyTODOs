@@ -28,6 +28,7 @@ inline void trim(std::string& s) {
 
 // TODO: Exctract magic numbers into constants
 // TODO: add config file and search that first if no arguments given
+// TODO: add filter to remove empty entries
 int main()
 {
 	// TODO: add arguments to be able to pick directory to check
