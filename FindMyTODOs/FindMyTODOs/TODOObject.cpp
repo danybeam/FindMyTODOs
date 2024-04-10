@@ -59,13 +59,7 @@ void TODOObject::insertLine(std::string filePath, std::string line, int lineNumb
 std::string TODOObject::toString(int indentLevel, int lastItemCount)
 {
 	std::stringstream buffer;
-	bool lastInList = lastItemCount < 0;
 	int localLast = lastItemCount;
-	if (lastInList)
-	{
-		localLast *= -1;
-	}
-
 	bool atLeastOne = false;
 
 	if (this->childrenDirectories.empty() && this->files.empty() && this->lines.empty())
@@ -73,85 +67,12 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 		return std::string();
 	}
 
-	// Tree stems
-
-	for (int i = 0; i < (indentLevel - localLast-1); i++)
-	{
-		buffer << "|  ";
-	}
-
-	// padding
-
-	for (int i = 0; i < localLast ; i++)
-	{
-		buffer << "   ";
-	}
-
-	// bendy boy
-
-	if (indentLevel == 0)
-	{
-		buffer << (unsigned char)218;
-	}
-	else
-	{
-		if (lastInList)
-		{
-			buffer << (unsigned char)192;
-		}
-		else
-		{
-			buffer << (unsigned char)195;
-		}
-	}
-
-	// other bendy boy
-	if (indentLevel > 0)
-	{
-		buffer << "--";
-		buffer << (unsigned char)194;
-	}
-
-	// arrow
-
-	buffer << "->";
 	// File/directory name
 	buffer << indentLevel << ", " << localLast << " " << this->name << "\n";
 
-	// Adjust indent level for printing lines and other stuff
 	indentLevel++;
-
 	for (std::string& line : this->lines)
 	{
-		// Tree stems
-
-		for (int i = 0; i < indentLevel - localLast - 1; i++)
-		{
-			buffer << "|  ";
-		}
-
-
-		// padding
-		bool isFirst = line == this->lines[0];
-		if (isFirst)
-		{
-			buffer << (unsigned char)192 << "--" << (unsigned char)194;
-		}
-
-		for (int i = 0; !isFirst && i < localLast+1; i++)
-		{
-			buffer << "   ";
-		}
-
-		// bendy boy
-		if (!isFirst)
-		{
-			unsigned char bendiBoi = line == this->lines.back() ? 192 : 195;
-			buffer << bendiBoi;
-		}
-		// arrow
-		buffer << "->";
-		// line
 		buffer << line << "\n";
 		atLeastOne |= true;
 	}
@@ -161,7 +82,6 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 		if (subItem == this->files.back() && this->childrenDirectories.empty())
 		{
 			localLast++;
-			localLast *= -1;
 		}
 
 		std::string temp = subItem->toString(indentLevel, localLast);
@@ -169,18 +89,11 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 		buffer << temp;
 	}
 
-	localLast = lastItemCount;
-	if (localLast < 0)
-	{
-		localLast *= -1;
-	}
-
 	for (TODOObject* subItem : this->childrenDirectories)
 	{
 		if (subItem == this->childrenDirectories.back())
 		{
 			localLast++;
-			localLast *= -1;
 		}
 
 		std::string temp = subItem->toString(indentLevel, localLast);
