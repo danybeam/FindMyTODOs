@@ -11,7 +11,7 @@ public:
 
   void insertSubdirectory(std::string directoryPath);
   void insertLine(std::string filePath, std::string line, int lineNumber);
-  std::string toString(int indentLevel);
+  std::string toString(int indentLevel, int lastItemCount = 0);
 
 private:
   bool isDirectory;

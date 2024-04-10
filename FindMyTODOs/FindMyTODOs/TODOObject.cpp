@@ -56,78 +56,47 @@ void TODOObject::insertLine(std::string filePath, std::string line, int lineNumb
 	this->files.back()->lines.emplace_back("(" + std::to_string(lineNumber) + ")\t: " + line);
 }
 
-std::string TODOObject::toString(int indentLevel)
+std::string TODOObject::toString(int indentLevel, int lastItemCount)
 {
 	std::stringstream buffer;
+	int localLast = lastItemCount;
+	bool atLeastOne = false;
 
-	if (indentLevel == 0)
+	if (this->childrenDirectories.empty() && this->files.empty() && this->lines.empty())
 	{
-		buffer << (unsigned char)218;
-	}
-	else if (indentLevel == 1)
-	{
-		buffer << (unsigned char)195;
-	}
-	else
-	{
-		buffer << "|";
+		return std::string();
 	}
 
-	for (int i = 0; i < indentLevel - 1; i++)
-	{
-		buffer << " ";
-	}
-
-	if (indentLevel > 0)
-	{
-		if (indentLevel > 1)
-		{
-			buffer << (unsigned char)192;
-		}
-		else if (indentLevel == 1)
-		{
-			buffer << "-";
-		}
-		buffer << (unsigned char)194;
-
-		buffer << "->";
-
-	}
-	buffer << this->name << "\n";
+	buffer << indentLevel << " " << this->name << "\n";
 
 	for (TODOObject* subItem : this->files)
 	{
-		buffer << subItem->toString(indentLevel + 1);
+		if (subItem == this->files.back() && this->childrenDirectories.empty())
+		{
+			localLast++;
+		}
+
+		std::string temp = subItem->toString(indentLevel + 1, localLast);
+		atLeastOne |= !temp.empty();
+		buffer << temp;
 	}
+
+	localLast = lastItemCount;
 
 	for (TODOObject* subItem : this->childrenDirectories)
 	{
-		bool isLastChild = subItem == this->childrenDirectories.back();
-		buffer << subItem->toString(indentLevel + 1);
+		if (subItem == this->childrenDirectories.back())
+		{
+			localLast++;
+		}
+
+		std::string temp = subItem->toString(indentLevel + 1, localLast);
+		atLeastOne |= !temp.empty();
+		buffer << temp;
 	}
 
-	int index = 1;
-	for (std::string line : this->lines)
-	{
-		char header = '|';
-		buffer << header;
-		for (int i = 0; i < indentLevel; i++)
-		{
-			buffer << " ";
-		}
-		if (index == this->lines.size())
-		{
-			buffer << (unsigned char)192;
-		}
-		else
-		{
-			buffer << (unsigned char)195;
-		}
-		buffer << "->";
-		buffer << line;
-		buffer << "\n";
-		index++;
-	}
+	// TODO: temp hack to keep file if there's lines
+	atLeastOne |= !this->lines.empty();
 
-	return buffer.str();
+	return atLeastOne ? buffer.str() : std::string();
 }
