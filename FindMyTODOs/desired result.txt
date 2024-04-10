@@ -1,25 +1,25 @@
-┌-->0, 0 C:\Users\Daniel\Downloads\root
-├--┬-->1, 0 \rootHeader.h
-|  ├->(1)    : // TODO thing
-|  ├->(7)    : // TODO middle thing
-|  ├->(8)    : // TODO middle thing
-|  └->(13)   : // TODO third thing
-├--┬-->1, 0 \child1Directory
-|  ├--┬-->2, 0 \child1SRC.cpp
-|  |  ├->(1) : // TODO thing
-|  |  └->(5) : // TODO third thing
-|  ├--┬-->2, 0 \child2Sib1
-|  |  ├--┬-->3, 0 \Child2Sib1SRC.cpp
-|  |  |  ├->(1)      : // TODO thing
-|  |  |  └->(5)      : // TODO third thing
-|  |  └--┬-->3, 1 \Child2Sib2SRC.cpp
-|  |     ├->(1)      : // TODO thing
-|  |     └->(5)      : // TODO third thing
-|  └--┬-->2, 1 \child2Sib2
+┌->0, 0 C:\Users\Daniel\Downloads\root
+├--┬->1, 0 \rootHeader.h
+|  └--┬->(1)    : // TODO thing
+|     ├->(7)    : // TODO middle thing
+|     ├->(8)    : // TODO middle thing
+|     └->(13)   : // TODO third thing
+├--┬->1, 0 \child1Directory
+|  ├--┬->2, 0 \child1SRC.cpp
+|  |  └--┬->(1) : // TODO thing
+|  |     └->(5) : // TODO third thing
+|  ├--┬->2, 0 \child2Sib1
+|  |  ├--┬->3, 0 \Child2Sib1SRC.cpp
+|  |  |  └--┬->(1)      : // TODO thing
+|  |  |     └->(5)      : // TODO third thing
+|  |  └--┬->3, 1 \Child2Sib2SRC.cpp
+|  |     └--┬->(1)      : // TODO thing
+|  |        └->(5)      : // TODO third thing
+|  └--┬->2, 1 \child2Sib2
 |     └--┬-->3, 2 \Child2Sib2SRC.cpp
-|        ├->(1)      : // TODO thing
-|        └->(5)      : // TODO third thing
-└--┬-->1, 1 \child2Directory
-   └--┬-->2, 2 \child2SRC.cpp
-      ├->(1) : // TODO thing
-      └->(5) : // TODO third thing
+|        └--┬->(1)      : // TODO thing
+|           └->(5)      : // TODO third thing
+└--┬->1, 1 \child2Directory
+   └--┬->2, 2 \child2SRC.cpp
+      └--┬->(1) : // TODO thing
+         └->(5) : // TODO third thing
