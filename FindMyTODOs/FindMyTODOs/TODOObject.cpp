@@ -75,14 +75,14 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 
 	// Tree stems
 
-	for (int i = 0; i < indentLevel - localLast-1; i++)
+	for (int i = 0; i < (indentLevel - localLast-1); i++)
 	{
 		buffer << "|  ";
 	}
 
 	// padding
 
-	for (int i = 0; i < localLast - 1; i++)
+	for (int i = 0; i < localLast ; i++)
 	{
 		buffer << "   ";
 	}
@@ -114,29 +114,41 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 
 	// arrow
 
-	buffer << "-->";
+	buffer << "->";
 	// File/directory name
-	buffer << indentLevel << ", " << lastItemCount << " " << this->name << "\n";
+	buffer << indentLevel << ", " << localLast << " " << this->name << "\n";
+
+	// Adjust indent level for printing lines and other stuff
+	indentLevel++;
 
 	for (std::string& line : this->lines)
 	{
 		// Tree stems
 
-		for (int i = 0; i < indentLevel - localLast; i++)
+		for (int i = 0; i < indentLevel - localLast - 1; i++)
 		{
 			buffer << "|  ";
 		}
 
-		// padding
 
-		for (int i = 0; i < localLast; i++)
+		// padding
+		bool isFirst = line == this->lines[0];
+		if (isFirst)
+		{
+			buffer << (unsigned char)192 << "--" << (unsigned char)194;
+		}
+
+		for (int i = 0; !isFirst && i < localLast+1; i++)
 		{
 			buffer << "   ";
 		}
 
 		// bendy boy
-		unsigned char bendiBoi = line == this->lines.back() ? 192 : 195;
-		buffer << bendiBoi;
+		if (!isFirst)
+		{
+			unsigned char bendiBoi = line == this->lines.back() ? 192 : 195;
+			buffer << bendiBoi;
+		}
 		// arrow
 		buffer << "->";
 		// line
@@ -152,7 +164,7 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 			localLast *= -1;
 		}
 
-		std::string temp = subItem->toString(indentLevel + 1, localLast);
+		std::string temp = subItem->toString(indentLevel, localLast);
 		atLeastOne |= !temp.empty();
 		buffer << temp;
 	}
@@ -171,7 +183,7 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 			localLast *= -1;
 		}
 
-		std::string temp = subItem->toString(indentLevel + 1, localLast);
+		std::string temp = subItem->toString(indentLevel, localLast);
 		atLeastOne |= !temp.empty();
 		buffer << temp;
 	}
