@@ -28,7 +28,6 @@ inline void trim(std::string& s) {
 
 // TODO: Exctract magic numbers into constants
 // TODO: add config file and search that first if no arguments given
-// TODO: add filter to remove empty entries
 int main()
 {
 	// TODO: add arguments to be able to pick directory to check
@@ -61,7 +60,6 @@ int main()
 			{
 				// TODO: add support for FIXME comments
 				// TODO: add support to define custom comments
-				// TODO: make this check to be begins with
 				trim(currentLine);
 				if (currentLine.find("// TODO") == 0)
 				{
@@ -76,83 +74,4 @@ int main()
 	}
 
 	std::cout << root.toString(0);
-
-	//std::vector<std::string> keys;
-
-	//for (auto entry : directoryMap)
-	//{
-	//	keys.push_back(entry.first);
-	//}
-
-	//// TODO: I'm sure this can be optimized/simplified by using index access instead of range loop
-	//std::sort(keys.begin(), keys.end());
-	//int indent = 1;
-	//int maxIndent = indent;
-	//int currentDirIndex;
-	//int currentKeyIndex = -1;
-	//bool resetLastTime = false;
-	//for (auto key : keys)
-	//{
-	//	currentDirIndex = 0;
-	//	currentKeyIndex++;
-	//	if (directoryMap[key].size() == 1 && !resetLastTime)
-	//	{
-	//		indent = 1;
-	//		maxIndent = indent;
-	//		resetLastTime = true;
-	//		std::cout << std::endl;
-	//	}
-
-	//	for (auto line : directoryMap[key])
-	//	{
-	//		currentDirIndex++;
-
-	//		if (indent > 0)
-	//		{
-	//			unsigned char header = 195;
-	//			if (indent == 1)
-	//			{
-	//				header = 218;
-	//			}
-	//			else if (
-	//				(currentKeyIndex + 1) < keys.size() &&
-	//				currentDirIndex == directoryMap[key].size() &&
-	//				directoryMap[keys[currentKeyIndex + 1]].size() == 1 &&
-	//				directoryMap[key].size() > 1
-	//				)
-	//			{
-	//				header = 192;
-	//			}
-	//			else if (
-	//				(currentKeyIndex + 1) == keys.size() &&
-	//				currentDirIndex == directoryMap[key].size()
-	//				)
-	//			{
-	//				header = 192;
-	//			}
-
-	//			std::cout << header;
-
-	//			for (int i = 0; i < indent * 2; i++)
-	//			{
-	//				std::cout << "-";
-	//			}
-
-	//			std::cout << "> ";
-	//		}
-
-	//		std::cout << (std::string)line << std::endl;
-
-	//		if (line.isFileName())
-	//		{
-	//			indent++;
-	//			maxIndent = maxIndent > indent ? maxIndent : indent;
-	//		}
-	//	}
-	//	if (directoryMap[key].size() != 1)
-	//	{
-	//		resetLastTime = false;
-	//		indent--;
-	//	}
-	//}
 }

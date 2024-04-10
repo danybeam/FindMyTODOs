@@ -14,6 +14,8 @@ TODOObject::~TODOObject()
 
 }
 
+// TODO: this doesn't take into account cases where it goes multiple levels deep
+// need to update insert directory to be aware of last common ancestor for directories
 void TODOObject::insertSubdirectory(std::string directoryPath)
 {
 	directoryPath = directoryPath.substr(this->name.size());
@@ -55,6 +57,7 @@ void TODOObject::insertLine(std::string filePath, std::string line, int lineNumb
 	this->files.push_back(new TODOObject(filePath, false));
 	this->files.back()->lines.emplace_back("(L" + std::to_string(lineNumber) + ")\t: " + line);
 }
+
 
 std::string TODOObject::toString(int indentLevel, int lastItemCount)
 {

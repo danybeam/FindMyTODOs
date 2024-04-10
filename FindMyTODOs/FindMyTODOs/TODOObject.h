@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 
-// TODO: Each node is in charge of printing only themselves with what they know
 class TODOObject {
 public:
   TODOObject(std::string name, bool isDirectory);
