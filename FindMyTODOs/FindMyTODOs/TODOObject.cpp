@@ -67,7 +67,74 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 		return std::string();
 	}
 
-	buffer << indentLevel << " " << this->name << "\n";
+	// Tree stems
+
+	for (int i = 0; i < indentLevel - localLast - 1; i++)
+	{
+		buffer << "|  ";
+	}
+
+	// padding
+
+	for (int i = 0; i < lastItemCount - 1; i++)
+	{
+		buffer << "   ";
+	}
+
+	// bendy boy
+
+	if (indentLevel == 0)
+	{
+		buffer << (unsigned char)218;
+	}
+	else if (indentLevel == 1)
+	{
+		buffer << (unsigned char)195;
+	}
+	else
+	{
+		buffer << (unsigned char)192;
+	}
+
+	// other bendy boy
+	if (indentLevel > 0)
+	{
+		buffer << "--";
+		buffer << (unsigned char)194;
+	}
+
+	// arrow
+
+	buffer << "-->";
+	// File/directory name
+	buffer << indentLevel << ", " << lastItemCount << " " << this->name << "\n";
+
+
+	for (std::string& line : this->lines)
+	{
+		// Tree stems
+
+		for (int i = 0; i < indentLevel - localLast + 1; i++)
+		{
+			buffer << "|  ";
+		}
+
+		// padding
+
+		for (int i = 0; i < lastItemCount; i++)
+		{
+			buffer << "   ";
+		}
+
+		// bendy boy
+		unsigned char bendiBoi = line == this->lines.back() ? 192 : 195;
+		buffer << bendiBoi;
+		// arrow
+		buffer << "->";
+		// line
+		buffer << line << "\n";
+		atLeastOne |= true;
+	}
 
 	for (TODOObject* subItem : this->files)
 	{
@@ -94,9 +161,6 @@ std::string TODOObject::toString(int indentLevel, int lastItemCount)
 		atLeastOne |= !temp.empty();
 		buffer << temp;
 	}
-
-	// TODO: temp hack to keep file if there's lines
-	atLeastOne |= !this->lines.empty();
 
 	return atLeastOne ? buffer.str() : std::string();
 }

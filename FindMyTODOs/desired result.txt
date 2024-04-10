@@ -1,23 +1,25 @@
-indent 0    ┌C:\Users\Daniel\Downloads\root
-indent 1    ├--┬->\rootHeader.h
-indent 1.5  |  └--┬->(1)        : // TODO thing
-indent 1.5  |     ├->(7)        : // TODO middle thing
-indent 1.5  |     ├->(8)        : // TODO middle thing
-indent 1.5f |     └->(13)       : // TODO third thing
-indent 1    ├--┬->\child1Directory
-indent 2    |  ├--┬->\child1SRC.cpp
-indent 2.5  |  |  └--┬->(1)       : // TODO thing
-indent 2.5f |  |     └->(5)       : // TODO third thing
-indent 2    |  ├--┬->\child2Sib1
-indent 3    |  |  ├--┬->\Child2Sib1SRC.cpp
-indent 3.5  |  |  |  └--┬->(1)      : // TODO thing
-indent 3.5f |  |  |     └->(5)      : // TODO third thing
-indent 3f   |  |  └--┬->\Child2Sib1SRC2.cpp
-indent 3.5f |  |     └---->(7)      : // TODO something else
-indent 2f   |  └--┬->\child2Sib2
-indent 3f   |     └--┬->\Child2Sib2SRC.cpp
-indent 3.5  |        └--┬->(1)      : // TODO thing
-indent 3.5f |           └->(5)      : // TODO third thing
-indent 1f   └--┬-->\child2Directory
-indent 2f      └--┬-->\child2SRC.cpp
-indent 2.5f       └---->(1) : // TODO: this isn't even real todo
+┌-->0, 0 C:\Users\Daniel\Downloads\root
+├--┬-->1, 0 \rootHeader.h
+|  ├->(1)    : // TODO thing
+|  ├->(7)    : // TODO middle thing
+|  ├->(8)    : // TODO middle thing
+|  └->(13)   : // TODO third thing
+├--┬-->1, 0 \child1Directory
+|  ├--┬-->2, 0 \child1SRC.cpp
+|  |  ├->(1) : // TODO thing
+|  |  └->(5) : // TODO third thing
+|  ├--┬-->2, 0 \child2Sib1
+|  |  ├--┬-->3, 0 \Child2Sib1SRC.cpp
+|  |  |  ├->(1)      : // TODO thing
+|  |  |  └->(5)      : // TODO third thing
+|  |  └--┬-->3, 1 \Child2Sib2SRC.cpp
+|  |     ├->(1)      : // TODO thing
+|  |     └->(5)      : // TODO third thing
+|  └--┬-->2, 1 \child2Sib2
+|     └--┬-->3, 2 \Child2Sib2SRC.cpp
+|        ├->(1)      : // TODO thing
+|        └->(5)      : // TODO third thing
+└--┬-->1, 1 \child2Directory
+   └--┬-->2, 2 \child2SRC.cpp
+      ├->(1) : // TODO thing
+      └->(5) : // TODO third thing
