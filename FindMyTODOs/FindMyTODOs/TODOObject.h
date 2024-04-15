@@ -13,6 +13,7 @@ public:
 	void insertLine(std::filesystem::path filePath, std::string line, int lineNumber);
 	std::string toString();
 	std::string toString(int indentLevel, std::string rootFolder, int skipLeft, int skipRight, bool lastInLevel);
+	std::string getPathAsString();
 
 private:
 	std::filesystem::path currentPath;

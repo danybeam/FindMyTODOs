@@ -10,6 +10,7 @@ const unsigned char lBend = 192;
 const unsigned char bendyT = 194;
 const unsigned char longDash = 196;
 
+
 TODOObject::TODOObject(std::filesystem::path path) :
 	currentPath(path)
 {
@@ -19,6 +20,8 @@ TODOObject::~TODOObject()
 {
 
 }
+
+
 
 void TODOObject::insertSubdirectory(std::filesystem::path directoryPath)
 {
@@ -71,6 +74,7 @@ void TODOObject::insertLine(std::filesystem::path filePath, std::string line, in
 		return;
 	}
 
+
 	// if we are at the correct directory insert file and line
 	if (this->currentPath == filePath.parent_path())
 	{
@@ -78,6 +82,8 @@ void TODOObject::insertLine(std::filesystem::path filePath, std::string line, in
 		this->files.back()->insertLine(filePath, line, lineNumber);
 		return;
 	}
+
+	// TODO: missing case were we're at the right directory but still needs re-rooting
 
 	// if we're at the correct parent create subdirectory and move there
 	this->childrenDirectories.emplace_back(new TODOObject(filePath.parent_path()));
@@ -130,7 +136,7 @@ std::string TODOObject::toString(int indentLevel, std::string rootFolder, int sk
 	{
 		buffer << bendyT;
 	}
-	
+
 	buffer << "-<<";
 	buffer << " ";
 
@@ -152,8 +158,8 @@ std::string TODOObject::toString(int indentLevel, std::string rootFolder, int sk
 	// Print all sub-directories
 	for (auto directory : this->childrenDirectories)
 	{
-		bool isLastDirectory = directory == this->childrenDirectories.back();
-		auto directoryString = directory->toString(indentLevel + 1, this->currentPath.string(), skipLeft, skipRight, isLastDirectory && this->files.empty());
+		bool isLastDirectory = directory == this->childrenDirectories.back() && this->files.empty();
+		auto directoryString = directory->toString(indentLevel + 1, this->currentPath.string(), skipLeft, skipRight, isLastDirectory);
 		atLeastOne |= !directoryString.empty();
 
 		buffer << directoryString;
@@ -163,7 +169,6 @@ std::string TODOObject::toString(int indentLevel, std::string rootFolder, int sk
 	for (auto file : this->files)
 	{
 		bool isLastFile = file == this->files.back();
-
 
 		auto fileString = file->toString(indentLevel + 1, rootFolder, skipLeft, skipRight, isLastFile);
 		atLeastOne |= !fileString.empty();
@@ -208,4 +213,9 @@ std::string TODOObject::toString(int indentLevel, std::string rootFolder, int sk
 	}
 
 	return atLeastOne ? buffer.str() : std::string();
+}
+
+std::string TODOObject::getPathAsString()
+{
+	return this->currentPath.string();
 }
