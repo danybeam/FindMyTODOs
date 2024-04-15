@@ -21,27 +21,9 @@
     <ClCompile Include="TODOObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="test\child1Directory\child2Sib1\Child2Sib1SRC.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test\child1Directory\child2Sib1\Child2Sib2SRC.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test\child1Directory\child2Sib2\Child2Sib2SRC.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test\child1Directory\child1SRC.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test\child2Directory\child2SRC.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TODOObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="test\rootHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -49,8 +31,5 @@
     <Image Include="test\child1Directory\testImage.bmp">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="test\filename.txt" />
   </ItemGroup>
 </Project>

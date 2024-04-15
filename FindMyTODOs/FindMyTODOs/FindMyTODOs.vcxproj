@@ -130,22 +130,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="FindMyTODOs.cpp" />
-    <ClCompile Include="test\child1Directory\child1SRC.cpp" />
-    <ClCompile Include="test\child1Directory\child2Sib1\Child2Sib1SRC.cpp" />
-    <ClCompile Include="test\child1Directory\child2Sib1\Child2Sib2SRC.cpp" />
-    <ClCompile Include="test\child1Directory\child2Sib2\Child2Sib2SRC.cpp" />
-    <ClCompile Include="test\child2Directory\child2SRC.cpp" />
     <ClCompile Include="TODOObject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="test\rootHeader.h" />
     <ClInclude Include="TODOObject.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="test\child1Directory\testImage.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="test\filename.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
