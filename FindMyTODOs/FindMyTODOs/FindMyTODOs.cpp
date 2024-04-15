@@ -69,5 +69,6 @@ int main()
 
 	}
 
+	// TODO: Add config for arrows and styles
 	std::cout << root.toString();
 }
