@@ -8,6 +8,7 @@ const unsigned char bendAndContinue = 195;
 const unsigned char bigPipe = 179;
 const unsigned char lBend = 192;
 const unsigned char bendyT = 194;
+const unsigned char longDash = 196;
 
 TODOObject::TODOObject(std::filesystem::path path) :
 	currentPath(path)
@@ -23,7 +24,6 @@ void TODOObject::insertSubdirectory(std::filesystem::path directoryPath)
 {
 }
 
-// TODO: test comment
 void TODOObject::insertLine(std::filesystem::path filePath, std::string line, int lineNumber)
 {
 
@@ -89,6 +89,7 @@ std::string TODOObject::toString()
 	return this->toString(0, this->currentPath.string(), 0, 0, false);
 }
 
+// TODO: Calculate how many tabs are needed and how many to use/not use at each level
 std::string TODOObject::toString(int indentLevel, std::string rootFolder, int skipLeft, int skipRight, bool lastInLevel)
 {
 	std::stringstream buffer;
@@ -124,12 +125,14 @@ std::string TODOObject::toString(int indentLevel, std::string rootFolder, int sk
 		buffer << bendAndContinue;
 	}
 
-	buffer << "--";
+	buffer << longDash << longDash;// << "--";
 	if (indentLevel > 0)
 	{
 		buffer << bendyT;
-		buffer << "->";
 	}
+	
+	buffer << "-<<";
+	buffer << " ";
 
 	// Print the name
 	if (this->currentPath.has_extension())
@@ -191,7 +194,6 @@ std::string TODOObject::toString(int indentLevel, std::string rootFolder, int sk
 			buffer << "   ";
 		}
 
-		// TODO: bendy boy here
 		if (line == this->lines.back())
 		{
 			buffer << lBend;
@@ -201,7 +203,7 @@ std::string TODOObject::toString(int indentLevel, std::string rootFolder, int sk
 			buffer << bendAndContinue;
 		}
 
-		buffer << "---->" << line << "\n";
+		buffer << "----> " << line << "\n";
 		atLeastOne |= true;
 	}
 
