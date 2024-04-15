@@ -1,25 +1,36 @@
-┌->C:\Users\Daniel\Downloads\root
-├--┬->\rootHeader.h
-|  ├---->(L1)   : // TODO thing
-|  ├---->(L7)   : // TODO middle thing
-|  ├---->(L8)   : // TODO middle thing
-|  └---->(L13)  : // TODO third thing
-├--┬->\child1Directory
-|  ├--┬->\child1SRC.cpp
-|  |  ├---->(L1)        : // TODO thing
-|  |  └---->(L5)        : // TODO third thing
-|  ├--┬->\child2Sib1
-|  |  ├--┬->\Child2Sib1SRC.cpp
-|  |  |  ├---->(L1)     : // TODO thing
-|  |  |  └---->(L5)     : // TODO third thing
-|  |  └--┬->\Child2Sib2SRC.cpp
-|  |     ├---->(L1)     : // TODO thing
-|  |     └---->(L5)     : // TODO third thing
-|  └--┬->\child2Sib2
-|     └--┬->\Child2Sib2SRC.cpp
-|        ├---->(L1)     : // TODO thing
-|        └---->(L5)     : // TODO third thing
-└--┬->\child2Directory
-   └--┬->\child2SRC.cpp
-      ├---->(L1)        : // TODO thing
-      └---->(L5)        : // TODO third thing
+┌->C:\home\src\FindMyTODOs\FindMyTODOs\FindMyTODOs
+├--┬->FindMyTODOs.cpp
+|  ├---->(L9)        : // TODO: Extract all this stuff into different file
+|  ├---->(L29)       : // TODO: Exctract magic numbers into constants
+|  ├---->(L30)       : // TODO: add config file and search that first if no arguments given
+|  ├---->(L33)       : // TODO: add arguments to be able to pick directory to check
+|  ├---->(L46)       : // TODO: add arguments to be able to chose one or multiple file types
+|  ├---->(L58)       : // TODO: add support for FIXME comments
+|  └---->(L59)       : // TODO: add support to define custom comments
+├--┬->TODOObject.cpp
+|  └---->(L27)       : // TODO: test comment
+└--┬->\test
+   ├--┬->rootHeader.h
+   |  ├---->(L1)     : // TODO thing
+   |  ├---->(L7)     : // TODO middle thing
+   |  ├---->(L8)     : // TODO middle thing
+   |  └---->(L13)    : // TODO third thing
+   ├--┬->\child1Directory
+   |  ├--┬->child1SRC.cpp
+   |  |  ├---->(L1)  : // TODO thing
+   |  |  └---->(L5)  : // TODO third thing
+   |  ├--┬->\child2Sib1
+   |  |  ├--┬->Child2Sib1SRC.cpp
+   |  |  |  ├---->(L1)       : // TODO thing
+   |  |  |  └---->(L5)       : // TODO third thing
+   |  |  └--┬->Child2Sib2SRC.cpp
+   |  |     ├---->(L1)       : // TODO thing
+   |  |     └---->(L5)       : // TODO third thing
+   |  └--┬->\child2Sib2
+   |     └--┬->Child2Sib2SRC.cpp
+   |        ├---->(L1)       : // TODO thing
+   |        └---->(L5)       : // TODO third thing
+   └--┬->\child2Directory
+      └--┬->child2SRC.cpp
+         ├---->(L1)  : // TODO thing
+         └---->(L5)  : // TODO third thing

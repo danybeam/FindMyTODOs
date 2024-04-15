@@ -33,19 +33,16 @@ int main()
 	// TODO: add arguments to be able to pick directory to check
 	std::filesystem::path cwd = std::filesystem::current_path();
 
-	TODOObject root(cwd.string(), true);
+	TODOObject root(cwd);
 
 	for (auto& path : std::filesystem::recursive_directory_iterator(cwd))
 	{
 		std::string currentPathAsString = path.path().string();
 
-		if (path.is_directory())
+		if (!path.is_regular_file())
 		{
-			root.insertSubdirectory(currentPathAsString);
-			//std::cout << path.path().string() << std::endl;
+			continue;
 		}
-		else if (path.is_regular_file())
-		{
 			// TODO: add arguments to be able to chose one or multiple file types
 			auto extension = path.path().extension();
 			if (extension != ".cpp" && extension != ".h")
@@ -63,15 +60,14 @@ int main()
 				trim(currentLine);
 				if (currentLine.find("// TODO") == 0)
 				{
-					root.insertLine(path.path().string(), currentLine, lineNumber);
+					root.insertLine(path.path(), currentLine, lineNumber);
 				}
 
 				lineNumber++;
 			}
 			file.close();
-		}
 
 	}
 
-	std::cout << root.toString(0);
+	std::cout << root.toString();
 }

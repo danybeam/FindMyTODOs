@@ -3,9 +3,14 @@
 #include <sstream>
 #include <cassert>
 
-TODOObject::TODOObject(std::string name, bool isDirectory) :
-	name(name),
-	isDirectory(isDirectory)
+const unsigned char indent0Bend = 218;
+const unsigned char bendAndContinue = 195;
+const unsigned char bigPipe = 179;
+const unsigned char lBend = 192;
+const unsigned char bendyT = 194;
+
+TODOObject::TODOObject(std::filesystem::path path) :
+	currentPath(path)
 {
 }
 
@@ -14,160 +19,190 @@ TODOObject::~TODOObject()
 
 }
 
-// TODO: this doesn't take into account cases where it goes multiple levels deep
-// need to update insert directory to be aware of last common ancestor for directories
-void TODOObject::insertSubdirectory(std::string directoryPath)
+void TODOObject::insertSubdirectory(std::filesystem::path directoryPath)
 {
-	directoryPath = directoryPath.substr(this->name.size());
+}
 
-	for (TODOObject* directory : this->childrenDirectories)
+// TODO: test comment
+void TODOObject::insertLine(std::filesystem::path filePath, std::string line, int lineNumber)
+{
+
+	// if it's correct file. move to file and add
+	for (TODOObject* file : this->files)
 	{
-		if (directoryPath.find(directory->name) == 0)
+		if (file->currentPath == filePath)
 		{
-			directory->insertSubdirectory(directoryPath);
+			file->insertLine(filePath, line, lineNumber);
 			return;
 		}
 	}
 
-	this->childrenDirectories.push_back(new TODOObject(directoryPath, true));
-}
-
-void TODOObject::insertLine(std::string filePath, std::string line, int lineNumber)
-{
-	filePath = filePath.substr(this->name.size());
-
+	// if it's correct directory move to directory and add
 	for (TODOObject* directory : this->childrenDirectories)
 	{
-		if (filePath.find(directory->name) == 0)
+		auto filePathAsString = filePath.parent_path().string();
+		auto directoryPathAsString = directory->currentPath.string();
+		// if we're not the deepest we can go, enter subdirectory
+		if ((directoryPathAsString.size() <= filePathAsString.size()) && filePathAsString.find(directoryPathAsString) == 0)
 		{
 			directory->insertLine(filePath, line, lineNumber);
 			return;
 		}
-	}
 
-	for (TODOObject* file : this->files)
-	{
-		if (filePath.find(file->name) == 0)
+
+		for (auto path = directory->currentPath; path > this->currentPath; path = path.parent_path())
 		{
-			file->lines.emplace_back("(L" + std::to_string(lineNumber) + ")\t: " + line);
-			return;
+			if (filePathAsString.find(path.string()) == 0 && path < directory->currentPath)
+			{
+				TODOObject* newNode = new TODOObject(path);
+				std::swap(*newNode, *directory);
+				directory->childrenDirectories.push_back(newNode);
+				directory->insertLine(filePath, line, lineNumber);
+				return;
+			}
 		}
 	}
 
-	this->files.push_back(new TODOObject(filePath, false));
-	this->files.back()->lines.emplace_back("(L" + std::to_string(lineNumber) + ")\t: " + line);
+	// if it's here add and exit
+	std::string newLine = "(L" + std::to_string(lineNumber) + ")\t: " + line;
+	if (this->currentPath == filePath)
+	{
+		this->lines.push_back(newLine);
+		return;
+	}
+
+	// if we are at the correct directory insert file and line
+	if (this->currentPath == filePath.parent_path())
+	{
+		this->files.emplace_back(new TODOObject(filePath));
+		this->files.back()->insertLine(filePath, line, lineNumber);
+		return;
+	}
+
+	// if we're at the correct parent create subdirectory and move there
+	this->childrenDirectories.emplace_back(new TODOObject(filePath.parent_path()));
+	this->childrenDirectories.back()->insertLine(filePath, line, lineNumber);
 }
 
+std::string TODOObject::toString()
+{
+	return this->toString(0, this->currentPath.string(), 0, 0, false);
+}
 
-std::string TODOObject::toString(int indentLevel, int lastItemCount)
+std::string TODOObject::toString(int indentLevel, std::string rootFolder, int skipLeft, int skipRight, bool lastInLevel)
 {
 	std::stringstream buffer;
-	int localLast = lastItemCount;
-	bool imLast = localLast < 0;
-	if (imLast)
-	{
-		localLast *= -1;
-	}
 	bool atLeastOne = false;
 
-	if (this->childrenDirectories.empty() && this->files.empty() && this->lines.empty())
-	{
-		return std::string();
-	}
-
 	// Tree stems
-	for (int i = 1; i < indentLevel; i++)
+	for (int i = 0; i < skipLeft; i++)
 	{
-		char head = '|';
-		if (
-			indentLevel == localLast ||
-			(localLast > 1 && i >= localLast)
-			)
-		{
-			head = ' ';
-		}
-		buffer << head << "  ";
+		buffer << "   ";
 	}
 
-	// arrow
-	char head = (unsigned char)194;
+	for (int i = skipLeft + 1; i < indentLevel; i++)
+	{
+		buffer << bigPipe << "  ";
+	}
+
+	for (int i = 0; i < skipRight; i++)
+	{
+		buffer << "   ";
+	}
+
+	// bendy boy
 	if (indentLevel == 0)
 	{
-		head = 218;
+		buffer << indent0Bend;
+	}
+	else if (lastInLevel)
+	{
+		buffer << lBend;
 	}
 	else
 	{
-		unsigned char subHead = 195;
-		if (imLast)
-		{
-			subHead = 192;
-		}
-		buffer << subHead << "--";
+		buffer << bendAndContinue;
 	}
-	buffer << head << "->";
+
+	buffer << "--";
+	if (indentLevel > 0)
+	{
+		buffer << bendyT;
+		buffer << "->";
+	}
+
+	// Print the name
+	if (this->currentPath.has_extension())
+	{
+		buffer << this->currentPath.filename().string() << "\n";
+	}
+	else if (indentLevel == 0)
+	{
+		buffer << this->currentPath.string() << "\n";
+	}
+	else
+	{
+		std::string miniName = this->currentPath.string().substr(rootFolder.size());
+		buffer << miniName << "\n";
+	}
+
+	// Print all sub-directories
+	for (auto directory : this->childrenDirectories)
+	{
+		bool isLastDirectory = directory == this->childrenDirectories.back();
+		auto directoryString = directory->toString(indentLevel + 1, this->currentPath.string(), skipLeft, skipRight, isLastDirectory && this->files.empty());
+		atLeastOne |= !directoryString.empty();
+
+		buffer << directoryString;
+	}
+
+	// Print all sub-files
+	for (auto file : this->files)
+	{
+		bool isLastFile = file == this->files.back();
 
 
-	// File/directory name
-	buffer << this->name << "\n";
+		auto fileString = file->toString(indentLevel + 1, rootFolder, skipLeft, skipRight, isLastFile);
+		atLeastOne |= !fileString.empty();
 
-	indentLevel++;
+		buffer << fileString;
+	}
 
+
+
+
+	// Print lines
+	if (lastInLevel)
+	{
+		skipRight++;
+	}
 	for (std::string& line : this->lines)
 	{
-		// Tree stems
-		for (int i = 1; i < indentLevel; i++)
+		for (int i = 0; i < skipLeft; i++)
 		{
-			char head = '|';
-			if (i >= (indentLevel - localLast))
-			{
-				head = ' ';
-			}
-			buffer << head << "  ";
+			buffer << "   ";
+		}
+		for (int i = skipLeft; i < indentLevel - skipRight; i++)
+		{
+			buffer << bigPipe << "  ";
+		}
+		for (int i = 0; i < skipRight; i++)
+		{
+			buffer << "   ";
 		}
 
-		// arrow
-		unsigned char head = 195;
+		// TODO: bendy boy here
 		if (line == this->lines.back())
 		{
-			head = 192;
+			buffer << lBend;
 		}
-		buffer << head << "---->";
+		else
+		{
+			buffer << bendAndContinue;
+		}
 
-
-		buffer << line << "\n";
+		buffer << "---->" << line << "\n";
 		atLeastOne |= true;
-	}
-
-	for (TODOObject* subItem : this->files)
-	{
-		if (subItem == this->files.back() && this->childrenDirectories.empty())
-		{
-			localLast++;
-			localLast *= -1;
-		}
-
-		std::string temp = subItem->toString(indentLevel, localLast);
-		atLeastOne |= !temp.empty();
-		buffer << temp;
-	}
-
-	localLast = lastItemCount;
-	if (imLast)
-	{
-		localLast *= -1;
-	}
-
-	for (TODOObject* subItem : this->childrenDirectories)
-	{
-		if (subItem == this->childrenDirectories.back())
-		{
-			localLast++;
-			localLast *= -1;
-		}
-
-		std::string temp = subItem->toString(indentLevel, localLast);
-		atLeastOne |= !temp.empty();
-		buffer << temp;
 	}
 
 	return atLeastOne ? buffer.str() : std::string();
